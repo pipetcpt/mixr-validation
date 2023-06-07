@@ -15,8 +15,21 @@ nmfe75 402.ctl 402.res -prdefault
 nmfe75 504.ctl 504.res -prdefault
 ```
 
-```{r eval = FALSE}
+```{r message = FALSE, warning = FALSE}
 library(nonmem2rx)
 mod1 <- nonmem2rx("psp-1/402.ctl", lst=".res", save=FALSE)
 mod2 <- nonmem2rx("psp-2/504.ctl", lst=".res", save=FALSE)
 ```
+
+
+```{r}
+library(rxode2)
+
+ev  <- et(amountUnits="mg", timeUnits="hours") %>%
+  et(amt=10000, addl=9, ii=12) %>%
+  et(time=120, amt=2000, addl=4, ii=14) %>%
+  et(0:240) # Add sampling 
+mod1_ev <- mod1 %>% rxSolve(ev)
+plot(mod1_ev, central)
+```
+
